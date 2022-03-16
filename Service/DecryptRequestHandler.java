@@ -56,7 +56,10 @@ public void stopServer() {
                 Scanner input = new Scanner(System.in);
                 String res = input.nextLine().toUpperCase();
                 if (res.equals("Y")) {
-                        DRHandler.requests.clear();
+                        while (DRHandler.requests.size() > 0) {
+                          DRHandler.requests.get(0).reject();
+                        }
+                        // DRHandler.requests.clear();
                         server.close();
                         System.out.println(DR_HEADER + "Server stopped");
                 } else {
@@ -76,24 +79,31 @@ public void command(String cmd) { // receive command from the main server
         case "help":
                 System.out.println("DecryptionRequestHandler commands:\n");
                 System.out.println("*tip: all DecryptionRequestHandler commands are ran with the DR: header");
-                System.out.println("\tDR:help: show this page");
-                System.out.println("\tDR:off: stop DecryptionRequestHandler");
-                System.out.println("\tDR:on: turn on DecryptionRequestHandler");
-                System.out.println("\tDR:show: show authenticated requests");
-                System.out.println("\tDR:reject <idx>: reject a specific request by index");
-                System.out.println("\tDR:accept <idx>: accept a specific request by index");
-                break;
+                System.out.println("\tDR.help: show this page");
+                System.out.println("\tDR.off: stop DecryptionRequestHandler");
+                System.out.println("\tDR.on: turn on DecryptionRequestHandler");
+                System.out.println("\tDR.show: show authenticated requests");
+                System.out.println("\tDR.reject <idx>: reject a specific request by index");
+                System.out.println("\tDR.accept <idx>: accept a specific request by index");
+                return;
         case "show": // show all authenticated requests
                 System.out.println(DRHandler.requests);
-                break;
+                return;
         case "off":
                 stopServer();
-                break;
+                return;
         case "on":
                 startServer();
-                break;
+                return;
         case "":
-                break;
+                return;
+        }
+        if (cmd.split(" ")[0].equals("accept")) {
+          int idx = Integer.parseInt(cmd.split(" ")[1]);
+          DRHandler.requests.get(idx).approve();
+          return;
+        } else {
+          System.out.println("Command not found");
         }
 
 
@@ -168,7 +178,10 @@ public static final String ANSI_PURPLE = "\u001B[35m";
 public static final String DR_HEADER = ANSI_PURPLE + "[DecryptionRequestHandler]: " + ANSI_RESET;
 private Socket socket;
 private DataInputStream in;
-public static ArrayList<Socket> requests = new ArrayList<Socket>();
+private DataOutputStream out;
+private String idhash = "";
+private String keyString = "";
+public static ArrayList<DRHandler> requests = new ArrayList<DRHandler>();
 public static File keys;
 public static int numOfThreads = 0;
 
@@ -178,6 +191,7 @@ public DRHandler(Socket socket, DataInputStream in) {
         numOfThreads++;
 
 }
+
 public boolean authenticate() {
         String id = "";
         String hash = "";
@@ -199,12 +213,17 @@ public boolean authenticate() {
                         while (reader.hasNextLine()) {
                                 String line = reader.nextLine();
                                 String[] rows = line.split(",");
-                                if (rows[2].equals(hash)) {
-                                        found = true;
-                                        requests.add(socket);
-                                        System.out.println(DR_HEADER + "Authentication succeeded");
-                                        return found;
+                                if (rows[0].equals(socket.getRemoteSocketAddress().toString().split(":")[0].substring(1))) {
+                                  if (rows[2].equals(hash)) {
+                                          found = true;
+                                          requests.add(this);
+                                          System.out.println(DR_HEADER + "Authentication succeeded");
+                                          idhash = hash;
+                                          keyString = rows[1];
+                                          return found;
+                                  }
                                 }
+
                         }
                         if (!found) {
                                 System.out.println(DR_HEADER + "Authentication failed");
@@ -226,19 +245,56 @@ public boolean authenticate() {
         return found;
 }
 
+public void approve() {
+  try {
+    out = new DataOutputStream(socket.getOutputStream());
+    out.writeUTF(keyString); // approve
+    if (requests.indexOf(this) >= 0) {
+            requests.remove(requests.indexOf(this));
+    }
+    close();
+  } catch (Exception e) {
+    System.out.println(e);
+          if (requests.indexOf(this) >= 0) {
+                  requests.remove(requests.indexOf(this));
+          }
+          close();
+  }
+
+}
+
+public void reject() {
+  try {
+    out = new DataOutputStream(socket.getOutputStream());
+    out.writeUTF("but I refuse"); // reject
+    if (requests.indexOf(this) >= 0) {
+            requests.remove(requests.indexOf(this));
+    }
+    close();
+  } catch (Exception e) {
+    System.out.println(e);
+          if (requests.indexOf(this) >= 0) {
+                  requests.remove(requests.indexOf(this));
+          }
+          close();
+  }
+
+}
+
 public void run() {
 
 // authenticate
         boolean auth = authenticate();
         if (auth) {
                 try {
+
                         while (!socket.isClosed())
                         {
                                 System.out.println(in.readUTF());
                         }
                 } catch (Exception e) {
-                        if (requests.indexOf(socket) >= 0) {
-                                requests.remove(requests.indexOf(socket));
+                        if (requests.indexOf(this) >= 0) {
+                                requests.remove(requests.indexOf(this));
                         }
                         close();
                 }

@@ -145,8 +145,10 @@ class KSHandler extends Thread {
         if (!f.exists()){
           f.createNewFile();
         }
-        PrintStream csv = new PrintStream(f);
-        csv.println(socket.getRemoteSocketAddress().toString().split(":")[0].substring(1) + "," + b64privkey + "," + b64IdHash);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
+        writer.append(socket.getRemoteSocketAddress().toString().split(":")[0].substring(1) + "," + b64privkey + "," + b64IdHash + "\n");
+        writer.close();
+
       } catch (Exception e) {
         System.out.println(e);
       }

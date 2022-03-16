@@ -14,28 +14,34 @@ public static void main(String[] args) {
                 if (cmd.equals("")) {
                   continue;
                 } else {
-                  if (cmd.split(":")[0].equals("DR")) {
-                    ds.command(cmd.split(":")[1]);
+                  if (cmd.split("\\.")[0].equals("DR")) {
+                    if (cmd.split("\\.").length == 2) {
+                      ds.command(cmd.split("\\.")[1]);
+                    } else {
+                      System.out.println("Please run DR.help for more information");
+                    }
                   }
-                  else if (cmd.split(":")[0].equals("KS")) {
+                  else if (cmd.split("\\.")[0].equals("KS")) {
                     ;
                   } else {
-                    switch (cmd) {
-                      case "clear":
-                        System.out.print("\033[H\033[2J");
-                        System.out.flush();
-                        break;
-                      case "help":
-                        System.out.println("Main Server Commands:\n");
-                        System.out.println("\thelp: show this page");
-                        System.out.println("\tclear: clear the screen");
-                        System.out.println("\tctrl-c: exit");
-                        System.out.println("KeyServer Commands:");
-                        System.out.println("DecryptionRequestHandler Commands:");
-                        System.out.println("\tDR:<command>: run commands for the DecryptionRequestHandler module");
-                        break;
-
+                    if (cmd.equals("clear")) {
+                      System.out.print("\033[H\033[2J");
+                      System.out.flush();
                     }
+                    else if (cmd.equals("help")) {
+                      System.out.println("Main Server Commands:\n");
+                      System.out.println("\thelp: show this page");
+                      System.out.println("\tclear: clear the screen");
+                      System.out.println("\tctrl-c: exit");
+                      System.out.println("KeyServer Commands:");
+                      System.out.println("DecryptionRequestHandler Commands:");
+                      System.out.println("\tDR.<command>: run commands for the DecryptionRequestHandler module");
+                    }
+
+                    else {
+                      System.out.println("Command not found");
+                    }
+
                   }
 
                 }

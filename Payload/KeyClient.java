@@ -85,6 +85,6 @@ public class KeyClient
 
     public static void main(String args[])
     {
-        KeyClient client = new KeyClient("192.168.68.52", 6666);
+        KeyClient client = new KeyClient("127.0.0.1", 6666);
     }
 }
