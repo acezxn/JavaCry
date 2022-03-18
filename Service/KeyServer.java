@@ -75,6 +75,7 @@ public class KeyServer {
                     FileWriter writer = new FileWriter(f);
                     writer.write("");
                     writer.close();
+                    System.out.println("keys.csv is now resetted");
                   } catch (Exception e) {
                     System.out.println("Unable to reset keys.csv: " + e);
                   }

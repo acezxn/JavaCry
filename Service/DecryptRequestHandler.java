@@ -100,10 +100,27 @@ public void command(String cmd) { // receive command from the main server
                 return;
         }
         if (cmd.split(" ")[0].equals("accept")) {
-          int idx = Integer.parseInt(cmd.split(" ")[1]);
-          DRHandler.requests.get(idx).approve();
+          try {
+            int idx = Integer.parseInt(cmd.split(" ")[1]);
+            DRHandler.requests.get(idx).approve();
+          } catch (Exception e) {
+            System.out.println("Invalid index. run DR.help for information");
+          }
+
           return;
-        } else {
+        }
+
+        else if (cmd.split(" ")[0].equals("reject")) {
+          try {
+            int idx = Integer.parseInt(cmd.split(" ")[1]);
+            DRHandler.requests.get(idx).reject();
+          } catch (Exception e) {
+            System.out.println("Invalid index. run DR.help for information");
+          }
+          return;
+        }
+
+        else {
           System.out.println("Command not found");
         }
 

@@ -38,6 +38,7 @@ public static void main(String[] args) {
                       System.out.println("\tclear: clear the screen");
                       System.out.println("\tctrl-c: exit");
                       System.out.println("KeyServer Commands:");
+                      System.out.println("\tKS.<command>: run commands for the DecryptionRequestHandler module");
                       System.out.println("DecryptionRequestHandler Commands:");
                       System.out.println("\tDR.<command>: run commands for the DecryptionRequestHandler module");
                     }

