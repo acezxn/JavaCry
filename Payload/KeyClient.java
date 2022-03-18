@@ -11,6 +11,7 @@ import java.util.Base64;
 
 public class KeyClient
 {
+    private static String addr = "127.0.0.1";
     private Socket socket            = null;
     private DataInputStream input    = null;
     private DataOutputStream out     = null;
@@ -85,6 +86,6 @@ public class KeyClient
 
     public static void main(String args[])
     {
-        KeyClient client = new KeyClient("127.0.0.1", 6666);
+        KeyClient client = new KeyClient(addr, 6666);
     }
 }

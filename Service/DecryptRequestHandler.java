@@ -77,8 +77,9 @@ public void stopServer() {
 public void command(String cmd) { // receive command from the main server
         switch (cmd) {
         case "help":
+                System.out.println("DecryptRequestHandler is a module to listen for decryption requests, manage authenticated requests, and send private keys to accepted victims.\n");
                 System.out.println("DecryptionRequestHandler commands:\n");
-                System.out.println("*tip: all DecryptionRequestHandler commands are ran with the DR: header");
+                System.out.println("*tip: all DecryptionRequestHandler commands are ran with the DR header");
                 System.out.println("\tDR.help: show this page");
                 System.out.println("\tDR.off: stop DecryptionRequestHandler");
                 System.out.println("\tDR.on: turn on DecryptionRequestHandler");

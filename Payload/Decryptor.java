@@ -41,7 +41,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 class Decryptor {
 private static int id = 802131503;
 private Socket socket;
-private String address;
+private static String address = "127.0.0.1";
 private int port;
 private DataOutputStream out     = null;
 private DataInputStream in     = null;
@@ -53,7 +53,6 @@ private Cipher RSA_Cipher;
 private Cipher AES_Cipher;
 
 public Decryptor() {
-        address = "127.0.0.1";
         port = 5555;
 
         String note = String.join("\n"

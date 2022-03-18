@@ -31,7 +31,7 @@ It is a project to build a ransomware made with java.
 	    * Decrypt Key_protected.key with the private key, get the AES key
 	    * Use the AES key to recursively decrypt the target folder
     * Delete itself, Key_protected.key
-
+ 
 ### MainServer Functionality:
 * It is the server that manages the victim's private keys and decryption requests.
 * Commands:
@@ -51,7 +51,6 @@ It is a project to build a ransomware made with java.
             * off: turn of server, rejecting all requests
             * on: turn on server
             * reset: reset keys.csv
-            * manual: show manual page
     * DecryptRequestHandler
 		* Commands:
 			* help: show help page
@@ -60,4 +59,3 @@ It is a project to build a ransomware made with java.
 			* accept <idx> accept a specific request
 			* off: turn of server, rejecting all requests
 			* on: turn on server
-			* manual: show manual page
