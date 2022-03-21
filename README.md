@@ -9,9 +9,10 @@ It is a project to build a ransomware made with java.
 
 
 ## User guideline
-* To package JavaCry into a Jar file, move to Payload/Classes/ and run `jar -cvmf ../manifest.txt JavaCry.jar *.class`
+* To compile JavaCry.java, move to Payload and run `javac JavaCry.java -d Classes --release 8` on terminal
+* To package JavaCry into a Jar file, move to Payload/Classes/ and run `jar -cvmf ../manifest.txt JavaCry.jar *.class` on terminal
 * Set the remote host IP address of JavaCry and Decryptor.java appropriately to your server's IP address.
-* Make sure targetPath is **set to the right folder**.
+* Make sure targetPath variable, which is in JavaCry.java, is **set to the right folder**.
 * The base64 encoded payload embedded in JavaCry resembles Decryptor.java. Modify Decryptor.java as needed and encode the new Base64 encoded string to JavaCry.
 
 ## Features:

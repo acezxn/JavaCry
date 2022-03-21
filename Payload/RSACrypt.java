@@ -34,6 +34,7 @@ public class RSACrypt {
     try {
       RSA_cipher = Cipher.getInstance("RSA");
       AES_cipher = Cipher.getInstance("AES");
+      System.out.println("Assigned");
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -47,7 +48,9 @@ public class RSACrypt {
       generator.init(256, random);
       AESKey = generator.generateKey();
 
-      AESString = KeyToString(AESKey);
+      byte[] data = AESKey.getEncoded();
+      AESString = Base64.getEncoder().encodeToString(data);
+
     } catch (Exception e) {
       System.out.println(e);
     }
