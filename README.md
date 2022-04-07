@@ -66,6 +66,6 @@ It is a project to build a ransomware made with java.
 
 ## How it works
 ### Encryption
-![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry Encryption.jpg)
+![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Encryption.jpg)
 ### Decryption
-![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry Decryption.jpg)
+![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Decryption.jpg)
