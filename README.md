@@ -63,3 +63,9 @@ It is a project to build a ransomware made with java.
 			* accept <idx> accept a specific request
 			* off: turn of server, rejecting all requests
 			* on: turn on server
+
+## How it works
+### Encryption
+![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry Encryption.jpg)
+### Decryption
+![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry Decryption.jpg)
