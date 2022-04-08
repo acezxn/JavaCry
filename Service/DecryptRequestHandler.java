@@ -88,7 +88,11 @@ public void command(String cmd) { // receive command from the main server
                 System.out.println("\tDR.accept <idx>: accept a specific request by index");
                 return;
         case "show": // show all authenticated requests
-                System.out.println(DRHandler.requests);
+                System.out.println("IDX\tIP\t\t\tIDhash");
+                for (int i = 0; i < DRHandler.requests.size(); i++) {
+                  DRHandler handler = DRHandler.requests.get(i);
+                  System.out.println(i + "\t" + handler.ip + "\t" + handler.idhash);
+                }
                 return;
         case "off":
                 stopServer();
@@ -175,6 +179,7 @@ public void run() {
                                 in = new DataInputStream(
                                         new BufferedInputStream(socket.getInputStream()));
 
+                                System.out.println("spawning new handler");
                                 DRHandler handler = new DRHandler(socket, in);
                                 handler.start();
 
@@ -197,14 +202,16 @@ public static final String DR_HEADER = ANSI_PURPLE + "[DecryptionRequestHandler]
 private Socket socket;
 private DataInputStream in;
 private DataOutputStream out;
-private String idhash = "";
 private String keyString = "";
+public String ip;
+public String idhash = "";
 public static ArrayList<DRHandler> requests = new ArrayList<DRHandler>();
 public static File keys;
 public static int numOfThreads = 0;
 
 public DRHandler(Socket socket, DataInputStream in) {
         this.socket = socket;
+        ip = socket.getRemoteSocketAddress().toString();
         this.in = in;
         numOfThreads++;
 
