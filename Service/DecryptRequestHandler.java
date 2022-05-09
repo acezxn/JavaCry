@@ -221,7 +221,7 @@ public boolean authenticate() {
         String id = "";
         String hash = "";
         boolean found = false;
-        System.out.println(DR_HEADER + "Start authentication");
+        // System.out.println(DR_HEADER + "Start authentication");
         while (!socket.isClosed())
         {
 
@@ -231,6 +231,7 @@ public boolean authenticate() {
                         id = in.readUTF();
                         byte[] data = md.digest(id.getBytes(StandardCharsets.UTF_8));
                         hash = Base64.getEncoder().encodeToString(data);
+                        idhash = hash;
                         System.out.println(hash);
 
                         Scanner reader = new Scanner(keys);
@@ -240,10 +241,15 @@ public boolean authenticate() {
                                 String[] rows = line.split(",");
                                 if (rows[0].equals(socket.getRemoteSocketAddress().toString().split(":")[0].substring(1))) {
                                   if (rows[2].equals(hash)) {
+                                          for (DRHandler req : requests) {
+                                                  if (req.idhash.equals(idhash)) {
+                                                        System.out.println(DR_HEADER + "Authentication failed");
+                                                        return false;
+                                                  }
+                                          }
                                           found = true;
                                           requests.add(this);
                                           System.out.println(DR_HEADER + "Authentication succeeded");
-                                          idhash = hash;
                                           keyString = rows[1];
                                           return found;
                                   }
