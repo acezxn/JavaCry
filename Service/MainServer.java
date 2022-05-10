@@ -25,7 +25,7 @@ public static void main(String[] args) {
                     if (cmd.split("\\.").length == 2) {
                       ks.command(cmd.split("\\.")[1]);
                     } else {
-                      System.out.println("Please run DR.help for more information");
+                      System.out.println("Please run KS.help for more information");
                     }
                   } else {
                     if (cmd.equals("clear")) {
