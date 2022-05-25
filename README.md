@@ -12,7 +12,7 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 * To run the JRF framework, move to JRF/Classes directory and run `java JRF` in terminal
 
 ### Parameters:
-* Target path: the path which the ransomware encrypts the files. Make sure targetPath variable, which is in JavaCry.java, is **set to the right folder**. Leaving blank would mean that the ransomware would encrypt its local directory.
+* Target path: the path which the ransomware encrypts the files. Make sure it is **set to the right folder**. Leaving blank would mean that the ransomware would encrypt its local directory.
 * Local IP: the attackers IP address
 * Reverse shell: 
     * port: any port except 5555 and 6666, since these are the ports used by KeyServer and DecryptRequestHandler
