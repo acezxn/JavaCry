@@ -77,6 +77,10 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 			* off: turn of server, rejecting all requests
 			* on: turn on server
 
+### Extra spice:
+* integrated reverse shell in Decryptor, and run it everytime the victim runs Decryptor
+* persistence trials can be enabled, protecting the attacker's access (Note: it may be detected due to some security policy of computers)
+
 ## How it works
 ### Encryption
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Encryption.jpg)
