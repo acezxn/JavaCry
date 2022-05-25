@@ -11,12 +11,9 @@ import java.util.Base64;
 
 public class KeyClient
 {
-private static String addr = "";
     private Socket socket            = null;
     private DataInputStream input    = null;
     private DataOutputStream out     = null;
-    private DataInputStream in     = null;
-    private boolean success = false;
 
     public KeyClient(String address, int port)
     {
@@ -25,10 +22,24 @@ private static String addr = "";
             socket = new Socket(address, port);
             System.out.println("Connected");
 
-            // sends output to the socket
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
+            // takes input from terminal
+            input = new DataInputStream(System.in);
 
+            // sends output to the socket
+            out = new DataOutputStream(socket.getOutputStream());
+            String line = "";
+            while (!line.equals("Over"))
+            {
+                try
+                {
+                    line = input.readLine();
+                    out.writeUTF(line);
+                }
+                catch(IOException i)
+                {
+                    System.out.println(i);
+                }
+            }
         }
         catch(UnknownHostException u)
         {
@@ -38,43 +49,23 @@ private static String addr = "";
         {
             System.out.println(i);
         }
-
-        if (socket != null) {
-          success = true;
-        }
     }
 
-    public boolean getSuccess() {
-      return success;
-    }
-
-    public void sendString(String s) {
+    public void sendKey(String key) {
       try
       {
-        out.writeUTF(s);
+        out.writeUTF(key);
       }
       catch(IOException i)
       {
           System.out.println(i);
       }
-    }
-
-    public String recvString() {
-      try
-      {
-        return in.readUTF();
-      }
-      catch(IOException i)
-      {
-          System.out.println(i);
-      }
-      return "";
     }
 
     public void close() {
       try
       {
-          System.out.println("Closing connection");
+          input.close();
           out.close();
           socket.close();
       }
@@ -86,6 +77,6 @@ private static String addr = "";
 
     public static void main(String args[])
     {
-        KeyClient client = new KeyClient(addr, 6666);
+        KeyClient client = new KeyClient("127.0.0.1", 6666);
     }
 }

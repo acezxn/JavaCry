@@ -1,19 +1,23 @@
-# JavaCry
+# JavaCry Java Ransomware Framework
 **Warning: this project is for educational purpose only. Please make sure that the program encrypts the right directory. I do not take any responsibility of any damage.**
 
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
 
 ### the project is still in development
 
-It is a project to build a ransomware made with java.
+It is a project to build a ransomware made with java. With the framwork, ransomware generation is automated.
 
 
 ## User guideline
-* To compile JavaCry.java, move to Payload and run `javac JavaCry.java -d Classes --release 8` on terminal
-* To package JavaCry into a Jar file, move to Payload/Classes/ and run `jar -cvmf ../manifest.txt JavaCry.jar *.class ../img/` on terminal
-* Set the remote host IP address of JavaCry and Decryptor.java appropriately to your server's IP address.
-* Make sure targetPath variable, which is in JavaCry.java, is **set to the right folder**.
-* The base64 encoded payload embedded in JavaCry resembles Decryptor.java. Modify Decryptor.java as needed and encode the new Base64 encoded string to JavaCry.
+* To run the JRF framework, move to JRF/Classes directory and run `java JRF` in terminal
+
+### Parameters:
+* Target path: the path which the ransomware encrypts the files. Make sure targetPath variable, which is in JavaCry.java, is **set to the right folder**. Leaving blank would mean that the ransomware would encrypt its local directory.
+* Local IP: the attackers IP address
+* Reverse shell: 
+    * port: any port except 5555 and 6666, since these are the ports used by KeyServer and DecryptRequestHandler
+    * persistence: Decryptor tries to configure the victim system so that the attacker's access would be persistent. This may be detected as some system has permission setting blocking this utility.
+
 
 ## Features:
 

