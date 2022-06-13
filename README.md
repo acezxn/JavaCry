@@ -1,6 +1,8 @@
 # JavaCry Java Ransomware Framework
 **Warning: this project is for educational purpose only. Please make sure that the program encrypts the right directory. I do not take any responsibility of any damage.**
 
+![image](https://github.com/acezxn/JavaCry/blob/main/images/JRFUI.png)
+
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
 
 ### the project is still in development
@@ -9,7 +11,7 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 
 
 ## User guideline
-* To run the JRF framework, move to JRF/Classes directory and run `java JRF` in terminal
+* To run the JRF framework, move to JRF/Classes directory and run `java JRF [commands]` in terminal
 * To run MainServer, which handles keys and decryption requests, move to JRF/Classes directory and run `java MainServer` in terminal
 
 ### Parameters:
@@ -22,12 +24,16 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 ### Command line arguments:
 
 ```
- -h,--IP <IP>                         Local IP address
- -o,--Export path <Export path>       destination for export
- -p,--PORT <PORT>                     Reverse shell port
- -P,--Persistence                     Activate reverse shell persistence
- -r,--Use reverse shell               Activate reverse shell
- -t,--Target dir <Target directory>   Target directory for the ransomware
+ -a,--Address <Address>              Crypto Address
+ -h,--IP <IP>                        Local IP address
+ -i,--Interactive                    Interactive mode
+ -o,--Export <Export path>           destination for export
+ -p,--revPort <port>                 Reverse shell port
+ -P,--Persistence                    Activate reverse shell persistence
+ -r,--UseRev                         Activate reverse shell
+ -t,--TargetDir <Target directory>   Target directory for the ransomware
+                                     to encrypt
+ -u,--UI                             GUI mode
 ```
 #### Note: reverse shell and persistence are optional
 

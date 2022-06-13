@@ -107,6 +107,14 @@ public class RSACrypt {
     }
   }
 
+  public void SaveRSAKey() {
+    try (FileOutputStream fos = new FileOutputStream("public.key")) {
+      fos.write(public_key.getEncoded());
+    } catch (IOException e) {
+      System.out.println(e);
+    }
+  }
+
   public void writeToFile(File f) throws IOException, IllegalBlockSizeException, BadPaddingException {
     FileInputStream in = new FileInputStream(f);
     byte[] input = new byte[(int) f.length()];
