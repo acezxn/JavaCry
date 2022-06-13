@@ -8,11 +8,15 @@ Functionality:
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.*;
+import javax.crypto.Cipher;
 import java.io.File;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.PKCS8EncodedKeySpec;
+
 
 public class DecryptRequestHandler {
         public static final String ANSI_RESET = "\u001B[0m";
@@ -147,6 +151,7 @@ class DRListener extends Thread {
         private Socket socket = null;
         private ServerSocket server = null;
         private DataInputStream in = null;
+        private DataOutputStream out = null;
         private int max_threads = 100;
 
         public DRListener(ServerSocket server) {
@@ -170,11 +175,11 @@ class DRListener extends Thread {
                                         socket = server.accept();
 
                                         // takes input from the client socket
-                                        in = new DataInputStream(
-                                                        new BufferedInputStream(socket.getInputStream()));
+                                        in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                                        out = new DataOutputStream(socket.getOutputStream());
 
                                         System.out.println("spawning new handler");
-                                        DRHandler handler = new DRHandler(socket, in);
+                                        DRHandler handler = new DRHandler(socket, in, out);
                                         handler.start();
 
                                 }
@@ -200,10 +205,11 @@ class DRHandler extends Thread {
         public static File keys;
         public static int numOfThreads = 0;
 
-        public DRHandler(Socket socket, DataInputStream in) {
+        public DRHandler(Socket socket, DataInputStream in, DataOutputStream out) {
                 this.socket = socket;
                 ip = socket.getRemoteSocketAddress().toString();
                 this.in = in;
+                this.out = out;
                 numOfThreads++;
 
         }
@@ -212,47 +218,78 @@ class DRHandler extends Thread {
                 String id = "";
                 String hash = "";
                 boolean found = false;
-                // System.out.println(DR_HEADER + "Start authentication");
+                System.out.println(DR_HEADER + "Start authentication");
                 while (!socket.isClosed()) {
 
                         try {
                                 MessageDigest md = MessageDigest.getInstance("SHA-256");
-                                id = in.readUTF();
-                                byte[] data = md.digest(id.getBytes(StandardCharsets.UTF_8));
-                                hash = Base64.getEncoder().encodeToString(data);
-                                idhash = hash;
-                                System.out.println(hash);
+                                String reqest = in.readUTF();
+                                if (reqest.equals("RequestForDecryption")) {
+                                        Random rand = new Random(System.currentTimeMillis());
+                                        int tokenData = (int) (rand.nextInt(Integer.MAX_VALUE));
+                                        byte[] tokenHashData = md.digest(String.valueOf(tokenData).getBytes(StandardCharsets.UTF_8));
+                                        String RFToken = Base64.getEncoder().encodeToString(tokenHashData);
+                                        out.writeUTF(RFToken);
 
-                                Scanner reader = new Scanner(keys);
+                                        String recvString = in.readUTF();
 
-                                while (reader.hasNextLine()) {
-                                        String line = reader.nextLine();
-                                        String[] rows = line.split(",");
-                                        if (rows[0].equals("IP")) {
-                                                continue;
-                                        }
-                                        if (rows[0].equals(socket.getRemoteSocketAddress().toString().split(":")[0]
-                                                        .substring(1))) {
-                                                if (rows[2].equals(hash)) {
-                                                        for (DRHandler req : requests) {
-                                                                if (req.idhash.equals(idhash)) {
-                                                                        System.out.println(DR_HEADER
-                                                                                        + "Authentication failed");
-                                                                        return false;
+                                        byte[] encryptedContent = Base64.getDecoder().decode(recvString.split(",")[0]);
+
+                                        Scanner reader = new Scanner(keys);
+
+                                        while (reader.hasNextLine()) {
+                                                String line = reader.nextLine();
+                                                String[] rows = line.split(",");
+                                                if (rows[0].equals("IP")) {
+                                                        continue;
+                                                }
+                                                if (rows[0].equals(socket.getRemoteSocketAddress().toString().split(":")[0]
+                                                                .substring(1))) {
+                                                        String b64KeyString = rows[1];
+                                                        byte[] pub = Base64.getDecoder().decode(b64KeyString);
+                                                        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(pub);
+                                                        KeyFactory factory = KeyFactory.getInstance("RSA");
+                                                        PrivateKey private_key = factory.generatePrivate(spec); 
+
+                                                        Cipher RSA_Cipher = Cipher.getInstance("RSA");
+                                                        RSA_Cipher.init(Cipher.DECRYPT_MODE, private_key);
+                                                        try {
+                                                                byte[] decrypted = RSA_Cipher.doFinal(encryptedContent);
+                                                                String decryptedString = new String(decrypted, StandardCharsets.UTF_8);
+                                                                id = decryptedString.split(",")[0];
+                                                                byte[] data = md.digest(id.getBytes(StandardCharsets.UTF_8));
+                                                                hash = Base64.getEncoder().encodeToString(data);
+                                                                idhash = hash;
+                                                                System.out.println(hash);
+                                                                if (rows[2].equals(hash)) {
+
+                                                                        if (!decryptedString.split(",")[1].equals(RFToken)) {
+                                                                                System.out.println(DR_HEADER + "Authentication failed");
+                                                                                return false;
+                                                                        }
+
+                                                                        for (DRHandler req : requests) {
+                                                                                if (req.idhash.equals(idhash)) {
+                                                                                        System.out.println(DR_HEADER
+                                                                                                        + "Authentication failed");
+                                                                                        return false;
+                                                                                }
+                                                                        }
+
+                                                                        found = true;
+                                                                        requests.add(this);
+                                                                        System.out.println(DR_HEADER + "Authentication succeeded");
+                                                                        keyString = rows[1];
+                                                                        return found;
                                                                 }
+                                                        } 
+                                                        catch (Exception e) {
+                                                                ;
                                                         }
-                                                        found = true;
-                                                        requests.add(this);
-                                                        System.out.println(DR_HEADER + "Authentication succeeded");
-                                                        keyString = rows[1];
-                                                        return found;
+
                                                 }
                                         }
-
-                                }
-                                if (!found) {
-                                        System.out.println(DR_HEADER + "Authentication failed");
-                                        return found;
+                                        
                                 }
 
                         } catch (FileNotFoundException e) {
@@ -260,9 +297,13 @@ class DRHandler extends Thread {
                                 close();
                                 break;
                         } catch (Exception e) {
-                                System.out.println(DR_HEADER + "[DecryptionRequestHandler]: " + e);
+                                System.out.println(DR_HEADER + e);
                                 break;
                         }
+                }
+                if (!found) {
+                        System.out.println(DR_HEADER + "Authentication failed");
+                        return found;
                 }
                 return found;
         }
