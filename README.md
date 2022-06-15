@@ -5,10 +5,9 @@
 
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
 
-### the project is still in development
+### What is it?
 
-It is a project to build a ransomware made with java. With the framwork, ransomware generation is automated.
-
+It is a project to build the java ransomwares generator and manage ransomware victims. It generates customized ransomwares, listens for victim's private key, and handles decryption requests. 
 
 ## User guideline
 * To run the JRF framework, move to JRF/Classes directory and run `java JRF [commands]` in terminal
@@ -49,8 +48,8 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 * Receives its public key from the server for decryption.
 * Creates 256 bit AES key, use the key to encrypt recursively in the target folder.
 * Save key: encrypt the AES key with the public key, and save as Key_protected.key.
-* Creates, compiles, and executes decryption.java.
-* decryptor.java:
+* Creates, compiles, and executes Decryptior.jar.
+* Decryptior.jar:
     * Opens a UI for decryption guideline
     * Shows a a button for sending decryption requests
     * Wait for the acceptance of DecryptRequestHandler
@@ -77,6 +76,8 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
             * Store the client’s IP, private key, and id hash in keys.csv
         * Commands:
             * help: show help page
+            * show: show information of victims
+            * remove <idx>: remove information about the specific victim in keys.csv. This would cause the victim to be unable to make decryption requests. 
             * off: turn of server, rejecting all requests
             * on: turn on server
             * reset: reset keys.csv
@@ -85,7 +86,7 @@ It is a project to build a ransomware made with java. With the framwork, ransomw
 			* help: show help page
 			* show: show authenticated clients
 			* reject <idx>: reject a specific request
-			* accept <idx> accept a specific request
+			* accept <idx>: accept a specific request
 			* off: turn of server, rejecting all requests
 			* on: turn on server
 

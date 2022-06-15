@@ -42,6 +42,9 @@ public class JRF {
         Option rev = new Option("r", "UseRev", false, "Activate reverse shell");
         options.addOption(rev);
 
+        Option MainServerOption = new Option("s", "Server", false, "Open MainServer");
+        options.addOption(MainServerOption);
+
         Option PortOption = Option.builder("p").longOpt("revPort")
                 .argName("port")
                 .hasArg()
@@ -94,8 +97,22 @@ public class JRF {
 
             if (!cmd.hasOption("i")) {
                 if (cmd.hasOption("u")) {
-                    JRFUI.start();
-                    return;
+                    if (!cmd.hasOption("s")) {
+                        JRFUI.start();
+                        return;
+                    } else {
+                        System.out.println("UI mode and server mode cannot be both enabled");
+                    }
+                }
+
+                if (cmd.hasOption("s")) {
+                    if (!cmd.hasOption("u")) {
+                        MainServer server = new MainServer();
+                        server.start();
+                        return;
+                    } else {
+                        System.out.println("UI mode and server mode cannot be both enabled");
+                    }
                 }
 
                 host = cmd.getOptionValue("IP");
