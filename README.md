@@ -32,6 +32,7 @@ It is a project to build the java ransomwares generator and manage ransomware vi
  -p,--revPort <port>                 Reverse shell port
  -P,--Persistence                    Activate reverse shell persistence
  -r,--UseRev                         Activate reverse shell
+ -s,--Server                         Open MainServer
  -t,--TargetDir <Target directory>   Target directory for the ransomware
                                      to encrypt
  -u,--UI                             GUI mode
