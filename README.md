@@ -11,7 +11,7 @@ It is a project to build the java ransomwares generator and manage ransomware vi
 
 ## User guideline
 * To run the JRF framework, move to JRF/Classes directory and run `java JRF [commands]` in terminal
-* To run MainServer, which handles keys and decryption requests, move to JRF/Classes directory and run `java MainServer` in terminal
+* To run MainServer, which handles keys and decryption requests, move to JRF/Classes directory and run `java MainServer` or `java JRF -s` in terminal
 
 ### Parameters:
 * Target path: the path which the ransomware encrypts the files. Make sure it is **set to the right folder**. Leaving blank would mean that the ransomware would encrypt its local directory.

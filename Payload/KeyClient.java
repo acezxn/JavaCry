@@ -23,7 +23,7 @@ public class KeyClient
         try
         {
             socket = new Socket(address, port);
-            System.out.println("Connected");
+            // System.out.println("Connected");
 
             // sends output to the socket
             in = new DataInputStream(socket.getInputStream());
@@ -74,7 +74,7 @@ public class KeyClient
     public void close() {
       try
       {
-          System.out.println("Closing connection");
+          // System.out.println("Closing connection");
           out.close();
           socket.close();
       }

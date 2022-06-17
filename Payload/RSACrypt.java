@@ -31,7 +31,7 @@ public class RSACrypt {
     try {
       RSA_cipher = Cipher.getInstance("RSA");
       AES_cipher = Cipher.getInstance("AES");
-      System.out.println("Assigned");
+      // System.out.println("Assigned");
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -80,13 +80,13 @@ public class RSACrypt {
   }
 
   public void encrypt(File f) throws InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
-    System.out.println("Encrypting file: " + f.getName());
+    // System.out.println("Encrypting file: " + f.getName());
     AES_cipher.init(Cipher.ENCRYPT_MODE, AESKey);
     writeToFile(f);
   }
 
   public void decrypt(File f) throws InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
-    System.out.println("Decrypting file: " + f.getName());
+    // System.out.println("Decrypting file: " + f.getName());
     AES_cipher.init(Cipher.DECRYPT_MODE, AESKey);
     writeToFile(f);
   }
