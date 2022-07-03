@@ -100,3 +100,7 @@ It is a project to build the java ransomwares generator and manage ransomware vi
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Encryption.jpg)
 ### Decryption
 ![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Decryption.jpg)
+
+## Things to work on
+* Use the Tor network
+* Add timer to Decryptor
