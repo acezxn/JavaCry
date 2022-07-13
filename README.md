@@ -3,7 +3,7 @@
 
 <img src="https://github.com/acezxn/JavaCry/blob/main/images/JRFUI.png" width="500"/>
 
-![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
+<img src="https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png" width="700"/>
 
 ### What is it?
 
