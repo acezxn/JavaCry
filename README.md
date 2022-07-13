@@ -1,9 +1,9 @@
 # JavaCry Java Ransomware Framework
 **Warning: this project is for educational purpose only. Please make sure that the program encrypts the right directory. I do not take any responsibility of any damage.**
 
-<img src="https://github.com/acezxn/JavaCry/blob/main/images/JRFUI.png" width="500"/>
+<img src="https://github.com/acezxn/JavaCry/blob/main/images/JRFUI.png" width="600"/>
 
-<img src="https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png" width="700"/>
+<img src="https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png" width="900"/>
 
 ### What is it?
 
@@ -97,9 +97,10 @@ It is a project to build the java ransomwares generator and manage ransomware vi
 
 ## How it works
 ### Encryption
-![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Encryption.jpg)
+<img src="https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Encryption.jpg" width="900"/>
+
 ### Decryption
-![image](https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Decryption.jpg)
+<img src="https://github.com/acezxn/JavaCry/blob/main/images/JavaCry_Decryption.jpg" width="900"/>
 
 ## Things to work on
 * Use the Tor network
