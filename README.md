@@ -83,7 +83,7 @@ It is a project to build the java ransomwares generator and manage ransomware vi
             * Creates a key pair, keep the private key
             * Receives the client’s id hash
             * Send public key to the client
-            * Store the client’s IP, private key, and id hash in keys.csv
+            * Store the client’s IP, private key, and id hash in keys.csv, which would be created in the user's home directory.
         * Commands:
             * help: show help page
             * show: show information of victims

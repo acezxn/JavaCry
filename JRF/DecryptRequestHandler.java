@@ -164,7 +164,7 @@ class DRListener extends Thread {
                         System.out.println(DR_HEADER + "Waiting for clients ...");
                         while (true) {
                                 try {
-                                        DRHandler.keys = new File("keys.csv");
+                                        DRHandler.keys = new File(System.getProperty("user.home") + "/keys.csv");
                                         break;
                                 } catch (Exception e) {
                                         continue;

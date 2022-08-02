@@ -15,7 +15,7 @@ public class KeyServer {
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_CYAN = "\u001B[36m";
   public static final String KS_HEADER = ANSI_CYAN + "[KeyServer]: " + ANSI_RESET;
-  public static String KeysFilePath = "keys.csv";
+  public static String KeysFilePath =  System.getProperty("user.home") + "/keys.csv";
   private Socket socket = null;
   private int port;
   private KSListener l;

