@@ -9,6 +9,24 @@
 
 It is a project to build the java ransomwares generator and manage ransomware victims. It generates customized ransomwares, listens for victim's private key, and handles decryption requests. 
 
+## Compatibility
+**The ransomware**
+
+* Windows with java installed
+* MacOS with java installed
+* Linux with java installed
+
+**Java Ransomware Framework**
+
+* Windows with java installed
+* MacOS with java installed
+* Linux with java installed
+
+**Java Ransomware Framework as a terminal command**
+
+* MacOS with bash or zsh
+* Linux with bash or zsh
+
 ## User guideline
 
 **Using an installer**
