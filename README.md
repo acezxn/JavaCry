@@ -1,9 +1,7 @@
 # JavaCry Java Ransomware Framework
 :warning: **This project is for educational purpose only. Please make sure to run the ransomware in a testing environment, double check that the program encrypts the right directory, and do not use the project for any illegal use. I do not take any responsibility of any damage.**
 
-![image](https://github.com/acezxn/JavaCry/blob/main/images/JRFUI.png)
-
-![image](https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png)
+<img src=https://github.com/acezxn/JavaCry/blob/main/images/YourFilesHaveBeenEncrypted.png>
 
 ### What is it?
 
